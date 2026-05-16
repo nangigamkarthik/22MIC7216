@@ -1,4 +1,5 @@
 export type NotificationType = "Placement" | "Result" | "Event";
+export type NotificationFilter = NotificationType | "All";
 
 export type NotificationItem = {
   ID: string;
@@ -27,4 +28,23 @@ export type PriorityInboxSnapshot = {
   sourceNote: string;
   generatedAt: string;
   notifications: NotificationItem[];
+};
+
+export type AllNotificationsPageData = {
+  notifications: NotificationItem[];
+  source: NotificationFeed["source"];
+  sourceNote: string;
+  page: number;
+  limit: number;
+  selectedType: NotificationFilter;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+
+export type PriorityNotificationsPageData = {
+  notifications: NotificationItem[];
+  source: NotificationFeed["source"];
+  sourceNote: string;
+  limit: number;
+  selectedType: NotificationFilter;
 };

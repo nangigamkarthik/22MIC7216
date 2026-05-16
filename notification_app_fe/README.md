@@ -1,6 +1,6 @@
-## Stage 1 Frontend Submission
+## Notifications Frontend
 
-This app is the frontend-track submission for the Campus Notifications Microservice assignment. It uses Next.js with TypeScript so the protected notification API can be accessed on the server while the UI stays in React.
+This app contains the frontend submission in a single project folder. It now includes the Stage 1 priority inbox and the Stage 2 pages for all notifications and priority notifications.
 
 ## Run locally
 
@@ -22,14 +22,22 @@ Copy `.env.example` to `.env.local` and add upstream credentials if they are pro
 
 If credentials are not provided, the app falls back to demo data so the UI and ranking logic can still be reviewed.
 
-## Implemented feature
+## Pages
 
-- Server-side protected API bridge at `src/app/api/priority-inbox/route.ts`
-- Priority inbox ranking by `Placement > Result > Event`
-- Recency-based tie breaking
-- Fixed-size min-heap strategy for maintaining top N efficiently
-- Responsive dashboard for screenshots and later-stage expansion
-- Root-level `notification_system_design.md` with the Stage 1 explanation
+- `/`
+- `/all-notifications`
+- `/priority-notifications`
+
+## Implemented features
+
+- Protected API fetch on the server side
+- Stage 1 top n priority inbox logic
+- Stage 2 all notifications page
+- Stage 2 priority notifications page
+- Type filter
+- Pagination on all notifications page
+- Viewed and new status in local storage
+- Material UI based styling
 
 ## Verify
 
@@ -38,15 +46,4 @@ npm run lint
 npm run build
 ```
 
-## Screenshot checklist
-
-- Dashboard showing top 10 notifications
-- Dropdown changed to another value like top 15
-- If live credentials are configured, show the live API mode banner
-- If not, the demo mode banner is acceptable for local proof of work
-
-## Folder structure
-
-- `notification_app_fe` contains the frontend implementation
-- `notification_app_be` is kept in the repository to match the submission checklist
-- `logging_middleware` remains available for the earlier setup stage
+If you do not configure credentials, the app uses demo data so the pages still work locally.

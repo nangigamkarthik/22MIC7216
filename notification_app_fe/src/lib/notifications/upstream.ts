@@ -1,5 +1,9 @@
 import { sampleNotifications } from "./sample-data";
-import type { NotificationFeed, NotificationItem } from "./types";
+import type {
+  NotificationFeed,
+  NotificationFilter,
+  NotificationItem,
+} from "./types";
 
 const DEFAULT_API_URL =
   "http://4.224.186.213/evaluation-service/notifications";
@@ -52,8 +56,16 @@ function buildDemoData(reason: string): NotificationFeed {
   };
 }
 
-export async function getNotificationFeed(): Promise<NotificationFeed> {
-  const apiUrl = process.env.NOTIFICATION_API_URL || DEFAULT_API_URL;
+type FeedOptions = {
+  limit?: number;
+  page?: number;
+  notificationType?: NotificationFilter;
+};
+
+export async function getNotificationFeed(
+  options?: FeedOptions,
+): Promise<NotificationFeed> {
+  const apiUrl = new URL(process.env.NOTIFICATION_API_URL || DEFAULT_API_URL);
   const demoFallbackAllowed =
     process.env.NOTIFICATION_ALLOW_DEMO_FALLBACK !== "false";
   const hasServerCredential =
@@ -66,8 +78,20 @@ export async function getNotificationFeed(): Promise<NotificationFeed> {
     );
   }
 
+  if (options?.limit) {
+    apiUrl.searchParams.set("limit", String(options.limit));
+  }
+
+  if (options?.page) {
+    apiUrl.searchParams.set("page", String(options.page));
+  }
+
+  if (options?.notificationType && options.notificationType !== "All") {
+    apiUrl.searchParams.set("notification_type", options.notificationType);
+  }
+
   try {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(apiUrl.toString(), {
       method: "GET",
       headers: buildHeaders(),
       cache: "no-store",
@@ -81,7 +105,7 @@ export async function getNotificationFeed(): Promise<NotificationFeed> {
 
       if (demoFallbackAllowed) {
         return buildDemoData(
-          `Upstream API returned ${response.status}. Demo data is shown until credentials or endpoint access are fixed.`,
+          `Upstream API returned ${response.status}. Demo data is shown instead.`,
         );
       }
 
@@ -100,7 +124,7 @@ export async function getNotificationFeed(): Promise<NotificationFeed> {
   } catch (error) {
     if (demoFallbackAllowed) {
       return buildDemoData(
-        `Live fetch failed. Demo data is shown for local review. ${(error as Error).message}`,
+        `Live fetch failed. Demo data is shown instead. ${(error as Error).message}`,
       );
     }
 
